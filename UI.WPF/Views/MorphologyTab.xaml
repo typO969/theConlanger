@@ -1,0 +1,37 @@
+<UserControl x:Class="UI.WPF.Views.MorphologyTab"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <Grid Margin="20">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="*"/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Lexicon" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+
+    <DataGrid Grid.Row="1" ItemsSource="{Binding Lexemes}" AutoGenerateColumns="False"
+              CanUserAddRows="False" Height="260" Margin="0,0,0,10">
+      <DataGrid.Columns>
+        <DataGridTextColumn Header="Lemma" Binding="{Binding Lemma}" Width="*"/>
+        <DataGridTextColumn Header="POS" Binding="{Binding Pos}" Width="80"/>
+        <DataGridTextColumn Header="Underlying (UR)" Binding="{Binding UR}" Width="240"/>
+        <DataGridTemplateColumn Header="">
+          <DataGridTemplateColumn.CellTemplate>
+            <DataTemplate>
+              <Button Content="Remove" Command="{Binding DataContext.RemoveLexemeCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                      CommandParameter="{Binding}"/>
+            </DataTemplate>
+          </DataGridTemplateColumn.CellTemplate>
+        </DataGridTemplateColumn>
+      </DataGrid.Columns>
+    </DataGrid>
+
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
+      <TextBox Width="140" Text="{Binding NewLemma}" Margin="0,0,5,0"/>
+      <TextBox Width="60" Text="{Binding NewPOS}" Margin="0,0,5,0"/>
+      <TextBox Width="260" Text="{Binding NewPhonemes}" Margin="0,0,5,0"/>
+      <Button Content="Add" Command="{Binding AddLexemeCommand}" Width="80"/>
+    </StackPanel>
+  </Grid>
+</UserControl>

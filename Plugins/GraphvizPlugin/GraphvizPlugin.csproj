@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><TargetFramework>net8.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><AssemblyName>GraphvizPlugin</AssemblyName></PropertyGroup>
+  <ItemGroup><ProjectReference Include="..\..\ConlangBuilder.Core\ConlangBuilder.Core.csproj" /></ItemGroup>
+</Project>
