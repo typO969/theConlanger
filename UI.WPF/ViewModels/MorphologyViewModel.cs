@@ -27,21 +27,10 @@ namespace UI.WPF.ViewModels
 
 			if (_engine.Morphology.Lexicon is InMemoryLexicon mem)
 			{
-				// Use reflection to access the private _dict field since GetAll() does not exist
-				var dictField = typeof(InMemoryLexicon)
-					.GetField("_dict", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-				if (dictField != null)
+				foreach (var lexeme in mem.GetAll().OrderBy(l => l.lemma))
 				{
-					var dict = dictField.GetValue(mem) as Dictionary<string, Lexeme>;
-					if (dict != null)
-					{
-						foreach (var kv in dict)
-						{
-							var ur = kv.Value.rootPhones.TryGetValue("UR", out var val) ? val : "";
-							Lexemes.Add(new LexemeItem(kv.Value.lemma, kv.Value.pos, ur));
-						}
-					}
+					var ur = lexeme.rootPhones.TryGetValue("UR", out var val) ? val : "";
+					Lexemes.Add(new LexemeItem(lexeme.lemma, lexeme.pos, ur));
 				}
 			}
 
@@ -78,23 +67,8 @@ namespace UI.WPF.ViewModels
 		{
 			if (_engine.Morphology.Lexicon is InMemoryLexicon mem)
 			{
-				// Clear the internal dictionary and repopulate it
-				var dictField = typeof(InMemoryLexicon)
-					.GetField("_dict", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-
-				if (dictField != null)
-				{
-					var dict = dictField.GetValue(mem) as Dictionary<string, Lexeme>;
-					if (dict != null)
-					{
-						dict.Clear();
-						foreach (var li in Lexemes)
-						{
-							var lexeme = new Lexeme(li.Lemma, li.Pos, new() { { "UR", li.UR } });
-							dict[li.Lemma] = lexeme;
-						}
-					}
-				}
+				mem.ReplaceAll(Lexemes.Select(li =>
+					new Lexeme(li.Lemma, li.Pos, new() { ["UR"] = li.UR })));
 			}
 		}
 	}
