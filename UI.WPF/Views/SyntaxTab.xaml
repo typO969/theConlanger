@@ -1,5 +1,26 @@
 <UserControl x:Class="UI.WPF.Views.SyntaxTab"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
- <Grid><TextBlock Text="Syntax settings coming soon..." HorizontalAlignment="Center" VerticalAlignment="Center"/></Grid>
+ <Grid Margin="20">
+  <Grid.RowDefinitions>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="*"/>
+  </Grid.RowDefinitions>
+
+  <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+   <TextBlock Text="Word Order:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+   <ComboBox Width="120" ItemsSource="{Binding WordOrders}" SelectedItem="{Binding SelectedWordOrder}" Margin="0,0,20,0"/>
+   <TextBlock Text="Clause:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+   <ComboBox Width="130" ItemsSource="{Binding ClauseTemplates}" SelectedItem="{Binding SelectedClauseTemplate}" Margin="0,0,20,0"/>
+   <Button Content="Refresh Preview" Command="{Binding RefreshPreviewCommand}" />
+  </StackPanel>
+
+  <TextBlock Grid.Row="1" Text="Linearization Preview" FontWeight="Bold" Margin="0,0,0,6"/>
+  <StackPanel Grid.Row="2">
+   <TextBox Text="{Binding LinearPreview}" Margin="0,0,0,8" IsReadOnly="True"/>
+   <TextBlock Text="Tree Summary" FontWeight="Bold" Margin="0,0,0,6"/>
+   <TextBox Text="{Binding TreePreview}" IsReadOnly="True" Height="80" TextWrapping="Wrap"/>
+  </StackPanel>
+ </Grid>
 </UserControl>
