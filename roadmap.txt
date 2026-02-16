@@ -1,0 +1,66 @@
+CONLANG BUILDER - ROADMAP (V3)
+
+-CORE.LANGUAGE
+	-LangEngine: end-to-end pipeline exists (syntax → morphology → phonology → orthography → evaluation).
+	-Phonology: inventory + (placeholder/simple) surface generation; rule hook exists.
+	-Morphology: lexicon-backed stem realization exists (currently “stem only”).
+	-Syntax: simple generator exists (currently fixed/basic SVO).
+	-Orthography: placeholder renderer (phones → string).
+	-Evaluation: placeholder/check scaffolding.
+
+-UI.WPF
+	-Phonology tab: functional add/remove phonemes, pushes back into engine.
+	-Morphology tab: functional add/remove lexemes, pushes back into in-memory lexicon.
+	-Output tab: generates sentences using current engine state.
+	-Syntax/Orthography tabs: present but not wired (placeholders).
+
+UP NEXT (in priority order)
+
+-PHASE 0 — Stabilize the foundation (required before “real language logic”)
+	1) Persistence
+	-Save/load a “Language Project” file (JSON): phoneme inventory, lexicon, phonotactics, rules, orthography mappings, settings.
+	-Autosave + manual Save/Save As.
+	2) Unify the Engine State
+	-Right now, pieces can drift (UI edits inventory/lexicon, other subsystems may still be default).
+	-Introduce a single LanguageProject model that the engine reads from, and UI edits.
+	3) Validation & Diagnostics
+	-Central “issues list” (invalid IPA symbols, duplicate lexemes, broken phonotactics, missing orthography mapping, etc.).
+	-Show issues in UI instead of silently failing.
+
+-PHASE 1 — Make generation non-trivial (core “language logic”)
+	4) Syntax: configurable sentence planning
+	-Choose word order (SVO/SOV/VSO/etc.).
+	-Choose clause templates (intransitive, transitive, copular, etc.).
+	-UI: basic controls + preview of tree/linearization.
+	5) Morphology: affixation and features
+	-Add features (Number, Case, Tense, Aspect, Person, etc.).
+	-Implement paradigms/realizers:
+		-e.g., Noun: plural suffix if Number=Pl
+		-Verb: past suffix if Tense=Past
+	-UI: define affixes and conditions, and see what forms are produced for a chosen lexeme.
+	6) Phonology: actual phonological rules + phonotactics
+	-Add real rewrite rules: assimilation, lenition, epenthesis, deletion.
+	-Add syllable/cluster legality checks (phonotactics).
+	-UI: rule list, enable/disable, ordering, and “show derivation steps.”
+
+-PHASE 2 — Orthography and output quality
+	7) Orthography: mapping layer
+	-phones → graphemes (digraphs, context-sensitive spelling, capitalization rules).
+	-UI: mapping table + exceptions.
+	8) Generation controls
+	-“Generate N samples”
+	-knobs: seed, length, lexeme selection constraints, feature constraints.
+	-Export: TXT/CSV.
+
+-PHASE 3 — Project-level UX (what makes it usable long-term)
+	9) Project management
+	-Recent files, undo/redo, import/export lexicon, versioned backups.
+	10) Inspectors / Visualizers
+	-Lexeme inspector: all inflected forms, UR → SR → orthography.
+	-Syntax tree viewer.
+	-Phonology derivation trace.
+
+-PHASE 4 — Plugins (explicitly later, per your decision)
+	11) Plugin interfaces
+	-Swap in new syntax generators, morphology realizers, phonology rule sets, orthography systems.
+	-Discovery/loading, sandboxing considerations.
