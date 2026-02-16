@@ -1,11 +1,13 @@
 using System.Collections.Generic;
-using System.Linq; // Add this for LINQ extension methods
+using System.Linq;
 
 namespace Core.Language.Morphology;
 
 public interface ILexicon
 {
     Lexeme Resolve(string lemmaId);
+    IReadOnlyCollection<Lexeme> GetAll();
+    void ReplaceAll(IEnumerable<Lexeme> lexemes);
 }
 
 public sealed class InMemoryLexicon : ILexicon
@@ -27,5 +29,16 @@ public sealed class InMemoryLexicon : ILexicon
         if (_dict.TryGetValue(lemmaId, out var lexeme))
             return lexeme;
         return _dict.Values.First();
+    }
+
+    public IReadOnlyCollection<Lexeme> GetAll() => _dict.Values.ToArray();
+
+    public void ReplaceAll(IEnumerable<Lexeme> lexemes)
+    {
+        _dict.Clear();
+        foreach (var lexeme in lexemes)
+        {
+            _dict[lexeme.lemma] = lexeme;
+        }
     }
 }

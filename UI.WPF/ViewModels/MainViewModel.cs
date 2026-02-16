@@ -25,8 +25,10 @@ public sealed class MainViewModel : ViewModelBase
         };
         var tact = new Phonotactics { allowedOnsets=["p","t","k","ʃ"], allowedCodas=["m","n","s","t","k"] };
         var phon = new Phonology(inv, tact);
-        var morph = new Morphology(new InMemoryLexicon());
-        var syn = new Syntax(new SimpleSvoGenerator(new InMemoryLexicon()));
+
+        var lexicon = new InMemoryLexicon();
+        var morph = new Morphology(lexicon);
+        var syn = new Syntax(new SimpleSvoGenerator(lexicon));
         var orth = new Orthography();
         var eval = new Evaluation();
         Engine = new LangEngine(phon, morph, syn, orth, eval);
@@ -34,7 +36,7 @@ public sealed class MainViewModel : ViewModelBase
         Tabs = new ObservableCollection<TabItemViewModel>
         {
             new("Phonology", new UI.WPF.Views.PhonologyTab { DataContext = new PhonologyViewModel(Engine) }),
-            new("Morphology", new UI.WPF.Views.MorphologyTab()),
+            new("Morphology", new UI.WPF.Views.MorphologyTab { DataContext = new MorphologyViewModel(Engine) }),
             new("Syntax", new UI.WPF.Views.SyntaxTab()),
             new("Orthography", new UI.WPF.Views.OrthographyTab()),
             new("Output", new UI.WPF.Views.OutputTab { DataContext = new OutputViewModel(Engine) })
