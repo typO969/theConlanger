@@ -4,34 +4,77 @@
   <Grid Margin="20">
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto"/>
-      <RowDefinition Height="*"/>
+      <RowDefinition Height="180"/>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition Height="160"/>
       <RowDefinition Height="Auto"/>
     </Grid.RowDefinitions>
 
-    <TextBlock Text="Lexicon" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
-
-    <DataGrid Grid.Row="1" ItemsSource="{Binding Lexemes}" AutoGenerateColumns="False"
-              CanUserAddRows="False" Height="260" Margin="0,0,0,10">
+    <TextBlock Text="Lexicon" FontSize="16" FontWeight="Bold" Margin="0,0,0,8"/>
+    <DataGrid Grid.Row="1" ItemsSource="{Binding Lexemes}" AutoGenerateColumns="False" CanUserAddRows="False">
       <DataGrid.Columns>
         <DataGridTextColumn Header="Lemma" Binding="{Binding Lemma}" Width="*"/>
-        <DataGridTextColumn Header="POS" Binding="{Binding Pos}" Width="80"/>
-        <DataGridTextColumn Header="Underlying (UR)" Binding="{Binding UR}" Width="240"/>
+        <DataGridTextColumn Header="POS" Binding="{Binding Pos}" Width="70"/>
+        <DataGridTextColumn Header="UR" Binding="{Binding UR}" Width="220"/>
         <DataGridTemplateColumn Header="">
           <DataGridTemplateColumn.CellTemplate>
             <DataTemplate>
-              <Button Content="Remove" Command="{Binding DataContext.RemoveLexemeCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                      CommandParameter="{Binding}"/>
+              <Button Content="Remove" Command="{Binding DataContext.RemoveLexemeCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
             </DataTemplate>
           </DataGridTemplateColumn.CellTemplate>
         </DataGridTemplateColumn>
       </DataGrid.Columns>
     </DataGrid>
 
-    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,10,0,0">
-      <TextBox Width="140" Text="{Binding NewLemma}" Margin="0,0,5,0"/>
+    <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,8">
+      <TextBox Width="130" Text="{Binding NewLemma}" Margin="0,0,5,0"/>
       <TextBox Width="60" Text="{Binding NewPOS}" Margin="0,0,5,0"/>
-      <TextBox Width="260" Text="{Binding NewPhonemes}" Margin="0,0,5,0"/>
-      <Button Content="Add" Command="{Binding AddLexemeCommand}" Width="80"/>
+      <TextBox Width="220" Text="{Binding NewPhonemes}" Margin="0,0,5,0"/>
+      <Button Content="Add Lexeme" Command="{Binding AddLexemeCommand}" Width="95"/>
+    </StackPanel>
+
+    <Grid Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="2*"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+      <DataGrid ItemsSource="{Binding Affixes}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="0,0,10,0">
+        <DataGrid.Columns>
+          <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+          <DataGridTextColumn Header="POS" Binding="{Binding Pos}" Width="60"/>
+          <DataGridTextColumn Header="Feat" Binding="{Binding FeatureName}" Width="90"/>
+          <DataGridTextColumn Header="Val" Binding="{Binding FeatureValue}" Width="80"/>
+          <DataGridTextColumn Header="Affix" Binding="{Binding Affix}" Width="80"/>
+          <DataGridTemplateColumn Header="">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <Button Content="Remove" Command="{Binding DataContext.RemoveAffixCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}"/>
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+        </DataGrid.Columns>
+      </DataGrid>
+      <StackPanel Grid.Column="1">
+        <TextBlock Text="Add Affix Rule" FontWeight="Bold" Margin="0,0,0,6"/>
+        <TextBox Text="{Binding NewAffixName}" Margin="0,0,0,4"/>
+        <TextBox Text="{Binding NewAffixPos}" Margin="0,0,0,4"/>
+        <TextBox Text="{Binding NewFeatureName}" Margin="0,0,0,4"/>
+        <TextBox Text="{Binding NewFeatureValue}" Margin="0,0,0,4"/>
+        <TextBox Text="{Binding NewAffixValue}" Margin="0,0,0,6"/>
+        <Button Content="Add Rule" Command="{Binding AddAffixCommand}"/>
+      </StackPanel>
+    </Grid>
+
+    <StackPanel Grid.Row="4" Margin="0,8,0,0">
+      <TextBlock Text="Preview Realizer" FontWeight="Bold"/>
+      <StackPanel Orientation="Horizontal" Margin="0,4,0,4">
+        <TextBox Width="100" Text="{Binding PreviewLemma}" Margin="0,0,4,0"/>
+        <TextBox Width="50" Text="{Binding PreviewPos}" Margin="0,0,4,0"/>
+        <TextBox Width="90" Text="{Binding PreviewFeatureName}" Margin="0,0,4,0"/>
+        <TextBox Width="90" Text="{Binding PreviewFeatureValue}" Margin="0,0,4,0"/>
+        <Button Content="Preview" Command="{Binding PreviewCommand}" Width="80"/>
+      </StackPanel>
+      <TextBox Text="{Binding PreviewResult}" IsReadOnly="True"/>
     </StackPanel>
   </Grid>
 </UserControl>
