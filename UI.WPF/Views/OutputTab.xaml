@@ -1,10 +1,31 @@
 <UserControl x:Class="UI.WPF.Views.OutputTab"
  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
- <StackPanel Margin="20">
-  <Button Content="Generate Sentence" Width="200" Margin="0,0,0,10"
-          Command="{Binding GenerateCommand}"/>
-  <TextBox Text="{Binding OutputText}" FontFamily="Consolas" FontSize="16"
-           Height="300" AcceptsReturn="True" TextWrapping="Wrap"/>
- </StackPanel>
+ <Grid Margin="20">
+  <Grid.RowDefinitions>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="*"/>
+  </Grid.RowDefinitions>
+
+  <WrapPanel Margin="0,0,0,10">
+   <TextBlock Text="N" VerticalAlignment="Center" Margin="0,0,4,0"/>
+   <TextBox Width="50" Text="{Binding SampleCount}" Margin="0,0,8,0"/>
+   <TextBlock Text="Words" VerticalAlignment="Center" Margin="0,0,4,0"/>
+   <TextBox Width="50" Text="{Binding ApproxWords}" Margin="0,0,8,0"/>
+   <TextBlock Text="Seed" VerticalAlignment="Center" Margin="0,0,4,0"/>
+   <TextBox Width="80" Text="{Binding Seed}" Margin="0,0,8,0"/>
+   <TextBlock Text="Feature" VerticalAlignment="Center" Margin="0,0,4,0"/>
+   <TextBox Width="90" Text="{Binding FeatureName}" Margin="0,0,4,0"/>
+   <TextBox Width="90" Text="{Binding FeatureValue}" Margin="0,0,8,0"/>
+   <Button Content="Generate" Width="90" Margin="0,0,6,0" Command="{Binding GenerateCommand}"/>
+   <Button Content="Export TXT" Width="90" Margin="0,0,6,0" Command="{Binding ExportTxtCommand}"/>
+   <Button Content="Export CSV" Width="90" Command="{Binding ExportCsvCommand}"/>
+  </WrapPanel>
+
+  <TextBox Grid.Row="1" Text="{Binding OutputText}" FontFamily="Consolas" Margin="0,0,0,10"
+           Height="120" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True"/>
+
+  <ListBox Grid.Row="2" ItemsSource="{Binding Samples}"/>
+ </Grid>
 </UserControl>
