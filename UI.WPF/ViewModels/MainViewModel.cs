@@ -39,7 +39,7 @@ public sealed class MainViewModel : ViewModelBase
             new("Phonology", new UI.WPF.Views.PhonologyTab { DataContext = new PhonologyViewModel(Engine) }),
             new("Morphology", new UI.WPF.Views.MorphologyTab { DataContext = new MorphologyViewModel(Engine) }),
             new("Syntax", new UI.WPF.Views.SyntaxTab { DataContext = new SyntaxViewModel(Engine, synGen) }),
-            new("Orthography", new UI.WPF.Views.OrthographyTab()),
+            new("Orthography", new UI.WPF.Views.OrthographyTab { DataContext = new OrthographyViewModel(Engine) }),
             new("Output", new UI.WPF.Views.OutputTab { DataContext = new OutputViewModel(Engine) })
         };
         SelectedTab = Tabs.Last();
