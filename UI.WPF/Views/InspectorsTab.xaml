@@ -1,0 +1,39 @@
+<UserControl x:Class="UI.WPF.Views.InspectorsTab"
+ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+ <Grid Margin="20">
+  <Grid.RowDefinitions>
+   <RowDefinition Height="Auto"/>
+   <RowDefinition Height="*"/>
+  </Grid.RowDefinitions>
+
+  <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+   <TextBlock Text="Lexeme:" VerticalAlignment="Center" Margin="0,0,8,0"/>
+   <ComboBox Width="220" ItemsSource="{Binding LexemeIds}" SelectedItem="{Binding SelectedLexeme}" Margin="0,0,8,0"/>
+   <Button Content="Refresh Inspectors" Command="{Binding RefreshCommand}"/>
+  </StackPanel>
+
+  <Grid Grid.Row="1">
+   <Grid.ColumnDefinitions>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="*"/>
+    <ColumnDefinition Width="*"/>
+   </Grid.ColumnDefinitions>
+
+   <StackPanel Grid.Column="0" Margin="0,0,8,0">
+    <TextBlock Text="Lexeme Inspector" FontWeight="Bold" Margin="0,0,0,6"/>
+    <TextBox Text="{Binding LexemeInspector}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="380"/>
+   </StackPanel>
+
+   <StackPanel Grid.Column="1" Margin="8,0,8,0">
+    <TextBlock Text="Syntax Tree Viewer" FontWeight="Bold" Margin="0,0,0,6"/>
+    <TextBox Text="{Binding SyntaxTreeInspector}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="380"/>
+   </StackPanel>
+
+   <StackPanel Grid.Column="2" Margin="8,0,0,0">
+    <TextBlock Text="Phonology Derivation Trace" FontWeight="Bold" Margin="0,0,0,6"/>
+    <TextBox Text="{Binding PhonologyTraceInspector}" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Height="380"/>
+   </StackPanel>
+  </Grid>
+ </Grid>
+</UserControl>

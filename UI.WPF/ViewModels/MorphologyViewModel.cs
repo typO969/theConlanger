@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -40,21 +41,14 @@ public sealed class MorphologyViewModel : ViewModelBase
     public ICommand RemoveAffixCommand { get; }
     public ICommand PreviewCommand { get; }
 
+    public event Action? LexiconChanged;
+    public event Action? AffixesChanged;
+
     public MorphologyViewModel(LangEngine engine)
     {
         _engine = engine;
 
-        if (_engine.Morphology.Lexicon is InMemoryLexicon mem)
-        {
-            foreach (var lexeme in mem.GetAll().OrderBy(l => l.Lemma))
-            {
-                var ur = lexeme.rootPhones.TryGetValue("UR", out var val) ? val : "";
-                Lexemes.Add(new LexemeItem(lexeme.Lemma, lexeme.Pos, ur));
-            }
-        }
-
-        foreach (var rule in _engine.Morphology.AffixRules)
-            Affixes.Add(new AffixItem(rule.Name, rule.Pos, rule.FeatureName, rule.FeatureValue, rule.Affix, rule.IsPrefix));
+        ReloadFromEngine();
 
         AddLexemeCommand = new RelayCommand(_ => AddLexeme(), _ => !string.IsNullOrWhiteSpace(NewLemma));
         RemoveLexemeCommand = new RelayCommand(RemoveLexeme);
@@ -73,6 +67,7 @@ public sealed class MorphologyViewModel : ViewModelBase
         );
         Lexemes.Add(lemma);
         UpdateLexicon();
+        LexiconChanged?.Invoke();
 
         NewLemma = NewPOS = NewPhonemes = "";
         Raise(nameof(NewLemma));
@@ -86,6 +81,7 @@ public sealed class MorphologyViewModel : ViewModelBase
         {
             Lexemes.Remove(item);
             UpdateLexicon();
+            LexiconChanged?.Invoke();
         }
     }
 
@@ -93,6 +89,7 @@ public sealed class MorphologyViewModel : ViewModelBase
     {
         Affixes.Add(new AffixItem(NewAffixName, NewAffixPos, NewFeatureName, NewFeatureValue, NewAffixValue, false));
         UpdateAffixes();
+        AffixesChanged?.Invoke();
 
         NewAffixName = "";
         Raise(nameof(NewAffixName));
@@ -104,7 +101,28 @@ public sealed class MorphologyViewModel : ViewModelBase
         {
             Affixes.Remove(item);
             UpdateAffixes();
+            AffixesChanged?.Invoke();
         }
+    }
+
+
+    public void ReloadFromEngine()
+    {
+        Lexemes.Clear();
+        if (_engine.Morphology.Lexicon is InMemoryLexicon mem)
+        {
+            foreach (var lexeme in mem.GetAll().OrderBy(l => l.Lemma))
+            {
+                var ur = lexeme.rootPhones.TryGetValue("UR", out var val) ? val : "";
+                Lexemes.Add(new LexemeItem(lexeme.Lemma, lexeme.Pos, ur));
+            }
+        }
+
+        Affixes.Clear();
+        foreach (var rule in _engine.Morphology.AffixRules)
+            Affixes.Add(new AffixItem(rule.Name, rule.Pos, rule.FeatureName, rule.FeatureValue, rule.Affix, rule.IsPrefix));
+
+        RunPreview();
     }
 
     private void UpdateLexicon()
