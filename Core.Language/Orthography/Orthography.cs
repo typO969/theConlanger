@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+#nullable enable
+
 namespace Core.Language.Orthography;
 
 public sealed record OrthographyRule(
