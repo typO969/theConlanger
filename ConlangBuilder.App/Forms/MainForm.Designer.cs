@@ -94,6 +94,7 @@ namespace ConlangBuilder
             this.tabGen = new System.Windows.Forms.TabPage();
 
             this.panelTop.SuspendLayout();
+            var buttonHeight = 33;
             this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelTop.Height = 56;
             this.panelTop.Controls.Add(this.txtName);
@@ -106,8 +107,10 @@ namespace ConlangBuilder
 
             this.btnSave.Location = new System.Drawing.Point(290, 12);
             this.btnSave.Text = "Save JSON";
+            this.btnSave.Height = buttonHeight;
             this.btnLoad.Location = new System.Drawing.Point(390, 12);
             this.btnLoad.Text = "Load JSON";
+            this.btnLoad.Height = buttonHeight;
 
             this.tabs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabs.TabPages.AddRange(new System.Windows.Forms.TabPage[] { this.tabPhonemes, this.tabOrth, this.tabSyll, this.tabMorph, this.tabPhono, this.tabRules, this.tabGen });
@@ -138,10 +141,10 @@ namespace ConlangBuilder
             this.numPhonWeight = new System.Windows.Forms.NumericUpDown(){ Minimum=1, Maximum=99, Value=1, Width=80 };
             this.chkAllowOnset = new System.Windows.Forms.CheckBox(){ Text="Allow Onset", Checked=true };
             this.chkAllowCoda = new System.Windows.Forms.CheckBox(){ Text="Allow Coda", Checked=true };
-            this.btnAddPhon = new System.Windows.Forms.Button(){ Text="Add/Replace", Width=120 };
-            this.btnUpdatePhon = new System.Windows.Forms.Button(){ Text="Update Selected", Width=140 };
-            this.btnDelPhon = new System.Windows.Forms.Button(){ Text="Delete Selected", Width=140 };
-            this.btnFeatures = new System.Windows.Forms.Button(){ Text="Features…", Width=120 };
+            this.btnAddPhon = new System.Windows.Forms.Button(){ Text="Add/Replace", Width=120, Height=buttonHeight };
+            this.btnUpdatePhon = new System.Windows.Forms.Button(){ Text="Update Selected", Width=140, Height=buttonHeight };
+            this.btnDelPhon = new System.Windows.Forms.Button(){ Text="Delete Selected", Width=140, Height=buttonHeight };
+            this.btnFeatures = new System.Windows.Forms.Button(){ Text="Features…", Width=120, Height=buttonHeight };
             pnlRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Symbol / Type / Weight"});
             pnlRight.Controls.Add(this.txtPhon);
             pnlRight.Controls.Add(this.cboType);
@@ -172,8 +175,8 @@ namespace ConlangBuilder
             var orthRight = new System.Windows.Forms.FlowLayoutPanel(){ Dock=System.Windows.Forms.DockStyle.Fill, FlowDirection=System.Windows.Forms.FlowDirection.TopDown, WrapContents=false, AutoScroll=true };
             this.txtPh = new System.Windows.Forms.TextBox(){ Width=220, PlaceholderText="Phoneme (e.g., t͡s)"};
             this.txtGr = new System.Windows.Forms.TextBox(){ Width=220, PlaceholderText="Grapheme (e.g., cz)"};
-            this.btnAddOrth = new System.Windows.Forms.Button(){ Text="Map" };
-            this.btnDelOrth = new System.Windows.Forms.Button(){ Text="Delete" };
+            this.btnAddOrth = new System.Windows.Forms.Button(){ Text="Map", Height=buttonHeight };
+            this.btnDelOrth = new System.Windows.Forms.Button(){ Text="Delete", Height=buttonHeight };
             orthRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Phoneme"});
             orthRight.Controls.Add(this.txtPh);
             orthRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Grapheme"});
@@ -197,8 +200,8 @@ namespace ConlangBuilder
             var sylRight = new System.Windows.Forms.FlowLayoutPanel(){ Dock=System.Windows.Forms.DockStyle.Fill, FlowDirection=System.Windows.Forms.FlowDirection.TopDown, WrapContents=false, AutoScroll=true };
             this.txtTemplate = new System.Windows.Forms.TextBox(){ Width=220, PlaceholderText="Pattern (CV, CVC, (C)VC)"};
             this.numTemplateWeight = new System.Windows.Forms.NumericUpDown(){ Minimum=1, Maximum=99, Value=1, Width=80 };
-            this.btnAddTemplate = new System.Windows.Forms.Button(){ Text="Add" };
-            this.btnDelTemplate = new System.Windows.Forms.Button(){ Text="Delete" };
+            this.btnAddTemplate = new System.Windows.Forms.Button(){ Text="Add", Height=buttonHeight };
+            this.btnDelTemplate = new System.Windows.Forms.Button(){ Text="Delete", Height=buttonHeight };
             sylRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Pattern"});
             sylRight.Controls.Add(this.txtTemplate);
             sylRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Weight"});
@@ -223,8 +226,8 @@ namespace ConlangBuilder
             this.cboAffixType = new System.Windows.Forms.ComboBox(){ DropDownStyle=System.Windows.Forms.ComboBoxStyle.DropDownList, Width=200 };
             this.txtAffixForm = new System.Windows.Forms.TextBox(){ Width=220, PlaceholderText="Affix form (e.g., -ka)"};
             this.txtAffixMeaning = new System.Windows.Forms.TextBox(){ Width=220, PlaceholderText="Meaning (e.g., diminutive)"};
-            this.btnAddMorph = new System.Windows.Forms.Button(){ Text="Add" };
-            this.btnDelMorph = new System.Windows.Forms.Button(){ Text="Delete" };
+            this.btnAddMorph = new System.Windows.Forms.Button(){ Text="Add", Height=buttonHeight };
+            this.btnDelMorph = new System.Windows.Forms.Button(){ Text="Delete", Height=buttonHeight };
             morphRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Affix type"});
             morphRight.Controls.Add(this.cboAffixType);
             morphRight.Controls.Add(new System.Windows.Forms.Label(){ Text="Form"});
@@ -255,7 +258,7 @@ namespace ConlangBuilder
             var lblMaxCoda = new System.Windows.Forms.Label(){ Text="Max coda cluster length:", Dock=System.Windows.Forms.DockStyle.Top };
 
             this.txtForbidden = new System.Windows.Forms.TextBox(){ Multiline=true, ScrollBars=System.Windows.Forms.ScrollBars.Vertical, Dock=System.Windows.Forms.DockStyle.Fill };
-            this.btnSavePhono = new System.Windows.Forms.Button(){ Text="Apply Phonotactic Settings", Dock=System.Windows.Forms.DockStyle.Bottom };
+            this.btnSavePhono = new System.Windows.Forms.Button(){ Text="Apply Phonotactic Settings", Dock=System.Windows.Forms.DockStyle.Bottom, Height=buttonHeight };
 
             var pnlOnset = new System.Windows.Forms.Panel(){ Dock=System.Windows.Forms.DockStyle.Fill };
             pnlOnset.Controls.Add(this.btnSavePhono);
@@ -296,10 +299,10 @@ namespace ConlangBuilder
             var colCond    = new System.Windows.Forms.DataGridViewTextBoxColumn(){ Name="colCond", HeaderText="Condition ([voicing=voiced], [+voice])" };
             this.gridRules.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[]{ colEnabled, colInput, colOutput, colEnv, colCond });
             var btnCol = new System.Windows.Forms.FlowLayoutPanel(){ Dock=System.Windows.Forms.DockStyle.Fill, FlowDirection=System.Windows.Forms.FlowDirection.TopDown, WrapContents=false };
-            this.btnAddRule = new System.Windows.Forms.Button(){ Text="Add Rule" };
-            this.btnDelRule = new System.Windows.Forms.Button(){ Text="Delete Rule" };
-            this.btnUpRule  = new System.Windows.Forms.Button(){ Text="↑ Move Up" };
-            this.btnDownRule= new System.Windows.Forms.Button(){ Text="↓ Move Down" };
+            this.btnAddRule = new System.Windows.Forms.Button(){ Text="Add Rule", Height=buttonHeight };
+            this.btnDelRule = new System.Windows.Forms.Button(){ Text="Delete Rule", Height=buttonHeight };
+            this.btnUpRule  = new System.Windows.Forms.Button(){ Text="↑ Move Up", Height=buttonHeight };
+            this.btnDownRule= new System.Windows.Forms.Button(){ Text="↓ Move Down", Height=buttonHeight };
             btnCol.Controls.Add(this.btnAddRule);
             btnCol.Controls.Add(this.btnDelRule);
             btnCol.Controls.Add(this.btnUpRule);
@@ -309,7 +312,7 @@ namespace ConlangBuilder
 
             var testPanel = new System.Windows.Forms.FlowLayoutPanel(){ Dock=System.Windows.Forms.DockStyle.Fill, FlowDirection=System.Windows.Forms.FlowDirection.LeftToRight, WrapContents=false };
             this.txtRuleTest = new System.Windows.Forms.TextBox(){ Width=400, PlaceholderText="Enter phoneme string (pre-orthography), e.g., 'taka'"};
-            this.btnApplyRuleTest = new System.Windows.Forms.Button(){ Text="Apply All Rules" };
+            this.btnApplyRuleTest = new System.Windows.Forms.Button(){ Text="Apply All Rules", Height=buttonHeight };
             this.txtRuleResult = new System.Windows.Forms.TextBox(){ Width=400, ReadOnly=true };
             testPanel.Controls.Add(new System.Windows.Forms.Label(){ Text="Test:" });
             testPanel.Controls.Add(this.txtRuleTest);
@@ -331,7 +334,7 @@ namespace ConlangBuilder
             this.numCount = new System.Windows.Forms.NumericUpDown(){ Minimum=1, Maximum=1000, Value=10, Width=80 };
             this.chkHyphenate = new System.Windows.Forms.CheckBox(){ Text="Hyphenate syllables" };
             this.chkAllowDup = new System.Windows.Forms.CheckBox(){ Text="Allow duplicates", Checked=true };
-            this.btnGenerate = new System.Windows.Forms.Button(){ Text="Generate" };
+            this.btnGenerate = new System.Windows.Forms.Button(){ Text="Generate", Height=buttonHeight };
             genRow.Controls.Add(lblSyl); genRow.Controls.Add(this.numSyll);
             genRow.Controls.Add(lblCnt); genRow.Controls.Add(this.numCount);
             genRow.Controls.Add(this.chkHyphenate); genRow.Controls.Add(this.chkAllowDup);
