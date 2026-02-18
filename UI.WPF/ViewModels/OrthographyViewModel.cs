@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -45,15 +46,14 @@ public sealed class OrthographyViewModel : ViewModelBase
     public ICommand RemoveExceptionCommand { get; }
     public ICommand PreviewCommand { get; }
 
+    public event Action? RulesChanged;
+    public event Action? ExceptionsChanged;
+
     public OrthographyViewModel(LangEngine engine)
     {
         _orthography = engine.Orthography;
 
-        foreach (var r in _orthography.Rules)
-            Rules.Add(new OrthographyRuleItem(r.Phone, r.Grapheme, r.PrevContext ?? "", r.NextContext ?? "", r.Enabled));
-
-        foreach (var e in _orthography.Exceptions)
-            Exceptions.Add(new OrthographyExceptionItem(e.Input, e.Output));
+        ReloadFromEngine();
 
         AddRuleCommand = new RelayCommand(_ => AddRule(), _ => !string.IsNullOrWhiteSpace(NewPhone));
         RemoveRuleCommand = new RelayCommand(RemoveRule);
@@ -64,10 +64,26 @@ public sealed class OrthographyViewModel : ViewModelBase
         UpdatePreview();
     }
 
+
+    public void ReloadFromEngine()
+    {
+        Rules.Clear();
+        foreach (var r in _orthography.Rules)
+            Rules.Add(new OrthographyRuleItem(r.Phone, r.Grapheme, r.PrevContext ?? "", r.NextContext ?? "", r.Enabled));
+
+        Exceptions.Clear();
+        foreach (var e in _orthography.Exceptions)
+            Exceptions.Add(new OrthographyExceptionItem(e.Input, e.Output));
+
+        Raise(nameof(SelectedCapitalization));
+        UpdatePreview();
+    }
+
     private void AddRule()
     {
         Rules.Add(new OrthographyRuleItem(NewPhone.Trim(), NewGrapheme, NewPrevContext, NewNextContext, true));
         SyncRules();
+        RulesChanged?.Invoke();
 
         NewPhone = NewGrapheme = NewPrevContext = NewNextContext = "";
         Raise(nameof(NewPhone));
@@ -84,6 +100,7 @@ public sealed class OrthographyViewModel : ViewModelBase
             Rules.Remove(rule);
             SyncRules();
             UpdatePreview();
+            RulesChanged?.Invoke();
         }
     }
 
@@ -91,6 +108,7 @@ public sealed class OrthographyViewModel : ViewModelBase
     {
         Exceptions.Add(new OrthographyExceptionItem(NewExceptionInput.Trim(), NewExceptionOutput.Trim()));
         SyncExceptions();
+        ExceptionsChanged?.Invoke();
 
         NewExceptionInput = NewExceptionOutput = "";
         Raise(nameof(NewExceptionInput));
@@ -105,6 +123,7 @@ public sealed class OrthographyViewModel : ViewModelBase
             Exceptions.Remove(exc);
             SyncExceptions();
             UpdatePreview();
+            ExceptionsChanged?.Invoke();
         }
     }
 

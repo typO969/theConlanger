@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -33,14 +35,14 @@ public sealed class PhonologyViewModel : ViewModelBase
     public ICommand RemoveRuleCommand { get; }
     public ICommand PreviewDerivationCommand { get; }
 
+    public event Action? InventoryChanged;
+    public event Action? RulesChanged;
+
     public PhonologyViewModel(LangEngine engine)
     {
         _engine = engine;
 
-        foreach (var c in _engine.Phonology.Inventory.consonants)
-            Consonants.Add(c.Symbol);
-        foreach (var v in _engine.Phonology.Inventory.vowels)
-            Vowels.Add(v.Symbol);
+        ReloadFromEngine();
 
         AddConsonantCommand = new RelayCommand(_ => AddConsonant(), _ => !string.IsNullOrWhiteSpace(NewPhoneme));
         AddVowelCommand = new RelayCommand(_ => AddVowel(), _ => !string.IsNullOrWhiteSpace(NewPhoneme));
@@ -53,12 +55,62 @@ public sealed class PhonologyViewModel : ViewModelBase
         UpdateDerivationPreview();
     }
 
+
+
+    public void LoadRuleSpecs(IEnumerable<RuleSpec> specs)
+    {
+        Rules.Clear();
+        foreach (var spec in specs)
+        {
+            Rules.Add(new RuleSpec
+            {
+                Name = spec.Name,
+                Target = spec.Target,
+                Replacement = spec.Replacement,
+                PrevPhone = spec.PrevPhone,
+                NextPhone = spec.NextPhone,
+                Enabled = spec.Enabled
+            });
+        }
+
+        if (Rules.Count == 0)
+            SeedRules();
+        else
+            SyncRules();
+
+        UpdateDerivationPreview();
+    }
+
+    public void ReloadFromEngine()
+    {
+        Consonants.Clear();
+        foreach (var c in _engine.Phonology.Inventory.consonants)
+            Consonants.Add(c.Symbol);
+
+        Vowels.Clear();
+        foreach (var v in _engine.Phonology.Inventory.vowels)
+            Vowels.Add(v.Symbol);
+
+        Rules.Clear();
+        foreach (var rule in _engine.Phonology.Rules.OfType<RewriteRule>())
+        {
+            // Existing rewrite rules are not directly introspectable; keep compact placeholders.
+            Rules.Add(new RuleSpec { Name = rule.Name });
+        }
+
+        if (Rules.Count == 0)
+            SeedRules();
+        else
+            UpdateDerivationPreview();
+    }
+
     private void AddConsonant()
     {
         if (!Consonants.Contains(NewPhoneme))
         {
             Consonants.Add(NewPhoneme);
             UpdateInventory();
+            InventoryChanged?.Invoke();
         }
 
         NewPhoneme = "";
@@ -70,6 +122,7 @@ public sealed class PhonologyViewModel : ViewModelBase
         {
             Vowels.Add(NewPhoneme);
             UpdateInventory();
+            InventoryChanged?.Invoke();
         }
 
         NewPhoneme = "";
@@ -87,6 +140,7 @@ public sealed class PhonologyViewModel : ViewModelBase
             Vowels.Remove(symbol);
 
         UpdateInventory();
+        InventoryChanged?.Invoke();
     }
 
     private void AddRule()
@@ -102,6 +156,7 @@ public sealed class PhonologyViewModel : ViewModelBase
 
         SyncRules();
         UpdateDerivationPreview();
+        RulesChanged?.Invoke();
     }
 
     private void RemoveRule(object? param)
@@ -111,6 +166,7 @@ public sealed class PhonologyViewModel : ViewModelBase
             Rules.Remove(rule);
             SyncRules();
             UpdateDerivationPreview();
+            RulesChanged?.Invoke();
         }
     }
 
@@ -140,6 +196,8 @@ public sealed class PhonologyViewModel : ViewModelBase
         foreach (var spec in Rules)
             _engine.Phonology.Rules.Add(spec.ToRule());
     }
+
+    public void UpdateDerivationPreviewFromOutside() => UpdateDerivationPreview();
 
     private void UpdateDerivationPreview()
     {
