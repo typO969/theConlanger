@@ -1,0 +1,12 @@
+{
+  "Id": "graphviz",
+  "Name": "Graphviz Export",
+  "Version": "1.0.0",
+  "Author": "Conlang Builder",
+  "Description": "Exports sound rule pipelines as Graphviz DOT files.",
+  "Website": "https://github.com/typO969/theConlanger",
+  "Isolation": "InProcess",
+  "Capabilities": [
+    "OutputFiles"
+  ]
+}

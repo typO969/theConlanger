@@ -1,0 +1,12 @@
+{
+  "Id": "evolution-sim",
+  "Name": "Evolution Simulator",
+  "Version": "1.0.0",
+  "Author": "Conlang Builder",
+  "Description": "Generates word samples from the current model.",
+  "Website": "https://github.com/typO969/theConlanger",
+  "Isolation": "OutOfProcess",
+  "Capabilities": [
+    "OutputFiles"
+  ]
+}

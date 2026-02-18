@@ -8,5 +8,29 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core.Language\Core.Language.csproj" />
+    <ProjectReference Include="..\ConlangBuilder.Core\ConlangBuilder.Core.csproj" />
+    <ProjectReference Include="..\Plugins\GraphvizPlugin\GraphvizPlugin.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="..\Plugins\EvolutionSimPlugin\EvolutionSimPlugin.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
+
+  <Target Name="BuildPluginHost" BeforeTargets="CopyPlugins">
+    <MSBuild Projects="..\PluginHost\PluginHost.csproj" Targets="Build" Properties="Configuration=$(Configuration)" />
+  </Target>
+
+  <Target Name="CopyPlugins" AfterTargets="Build">
+    <ItemGroup>
+      <PluginBinaries Include="..\Plugins\GraphvizPlugin\bin\$(Configuration)\net8.0\GraphvizPlugin.dll" />
+      <PluginBinaries Include="..\Plugins\EvolutionSimPlugin\bin\$(Configuration)\net8.0\EvolutionSimPlugin.dll" />
+      <PluginManifests Include="..\Plugins\GraphvizPlugin\bin\$(Configuration)\net8.0\GraphvizPlugin.plugin.json" />
+      <PluginManifests Include="..\Plugins\EvolutionSimPlugin\bin\$(Configuration)\net8.0\EvolutionSimPlugin.plugin.json" />
+      <PluginHostArtifacts Include="..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.exe" Condition="Exists('..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.exe')" />
+      <PluginHostArtifacts Include="..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.dll" Condition="Exists('..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.dll')" />
+      <PluginHostArtifacts Include="..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.deps.json" Condition="Exists('..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.deps.json')" />
+      <PluginHostArtifacts Include="..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.runtimeconfig.json" Condition="Exists('..\PluginHost\bin\$(Configuration)\net8.0\PluginHost.runtimeconfig.json')" />
+    </ItemGroup>
+    <MakeDir Directories="$(TargetDir)plugins" />
+    <Copy SourceFiles="@(PluginBinaries)" DestinationFolder="$(TargetDir)plugins" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PluginManifests)" DestinationFolder="$(TargetDir)plugins" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(PluginHostArtifacts)" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="true" />
+  </Target>
 </Project>

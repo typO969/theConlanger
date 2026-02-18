@@ -30,6 +30,7 @@ public sealed class MainViewModel : ViewModelBase
     public OrthographyViewModel OrthographyVm { get; }
     public OutputViewModel OutputVm { get; }
     public InspectorsViewModel InspectorsVm { get; }
+    public ExtensionsViewModel ExtensionsVm { get; }
 
     private readonly ProjectHistory _history = new(60);
     private readonly PluginCatalog _pluginCatalog = new();
@@ -75,6 +76,8 @@ public sealed class MainViewModel : ViewModelBase
         OrthographyVm = new OrthographyViewModel(Engine);
         OutputVm = new OutputViewModel(Engine);
         InspectorsVm = new InspectorsViewModel(Engine, SyntaxGenerator);
+        var pluginFolder = Path.Combine(AppContext.BaseDirectory, "plugins");
+        ExtensionsVm = new ExtensionsViewModel(_pluginCatalog, pluginFolder, () => LanguageProjectState.Capture(ProjectName, Engine, SyntaxGenerator, PhonologyVm.Rules));
 
         Tabs = new ObservableCollection<TabItemViewModel>
         {
@@ -84,7 +87,7 @@ public sealed class MainViewModel : ViewModelBase
             new("Orthography", new UI.WPF.Views.OrthographyTab { DataContext = OrthographyVm }),
             new("Output", new UI.WPF.Views.OutputTab { DataContext = OutputVm }),
             new("Inspectors", new UI.WPF.Views.InspectorsTab { DataContext = InspectorsVm }),
-            new("Extensions", new UI.WPF.Views.ExtensionsTab { DataContext = new ExtensionsViewModel(_pluginCatalog) })
+            new("Extensions", new UI.WPF.Views.ExtensionsTab { DataContext = ExtensionsVm })
         };
         SelectedTab = Tabs.Last();
 
@@ -100,8 +103,6 @@ public sealed class MainViewModel : ViewModelBase
         HookChangeTracking();
         PushCheckpoint("Initial");
 
-        var pluginFolder = Path.Combine(AppContext.BaseDirectory, "plugins");
-        _pluginCatalog.Refresh(pluginFolder);
     }
 
     private void HookChangeTracking()

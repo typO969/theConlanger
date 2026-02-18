@@ -7,9 +7,9 @@ namespace ConlangBuilder.Core
 {
     public static class PluginLoader
     {
-        public static System.Collections.Generic.List<IPlugin> LoadAll(string pluginDir, ILabContext ctx)
+        public static System.Collections.Generic.List<PluginLoadResult> LoadAll(string pluginDir, ILabContext ctx)
         {
-            var plugins = new System.Collections.Generic.List<IPlugin>();
+            var plugins = new System.Collections.Generic.List<PluginLoadResult>();
             if (!Directory.Exists(pluginDir)) return plugins;
             foreach (var dll in Directory.EnumerateFiles(pluginDir, "*.dll", SearchOption.AllDirectories))
             {
@@ -21,7 +21,11 @@ namespace ConlangBuilder.Core
                     {
                         if (typeof(IPlugin).IsAssignableFrom(t) && !t.IsAbstract)
                         {
-                            if (System.Activator.CreateInstance(t) is IPlugin p) { p.Initialize(ctx); plugins.Add(p); }
+                            if (System.Activator.CreateInstance(t) is IPlugin p)
+                            {
+                                p.Initialize(ctx);
+                                plugins.Add(new PluginLoadResult(dll, p));
+                            }
                         }
                     }
                 } catch (System.Exception ex) { ctx.Log($"Failed to load {dll}: {ex.Message}"); }
@@ -29,4 +33,6 @@ namespace ConlangBuilder.Core
             return plugins;
         }
     }
+
+    public sealed record PluginLoadResult(string Path, IPlugin Plugin);
 }
