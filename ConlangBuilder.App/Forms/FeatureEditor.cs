@@ -32,7 +32,7 @@ namespace ConlangBuilder.Forms
             {
                 var row = grid.Rows[i];
                 if (row.IsNewRow) continue;
-                string sym = row.Cells["colSymbol"].Value?.ToString();
+                var sym = row.Cells["colSymbol"].Value?.ToString();
                 if (string.IsNullOrWhiteSpace(sym)) continue;
                 var p = _model.Inventory.Phonemes.FirstOrDefault(x => x.Symbol == sym);
                 if (p == null) continue;
